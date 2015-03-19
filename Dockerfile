@@ -1,6 +1,7 @@
 FROM phusion/baseimage:0.9.16
-MAINTAINER needo <needo@superhero.org>
-ENV DEBIAN_FRONTEND noninteractive
+MAINTAINER David Young <davidy@funkypenguin.co.nz>
+#Based on the work of needo <needo@superhero.org>
+#ENV DEBIAN_FRONTEND noninteractive
 
 # Set correct environment variables
 ENV HOME /root
@@ -8,9 +9,8 @@ ENV HOME /root
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
 
-# Fix a Debianism of the nobody's uid being 65534
-RUN usermod -u 99 nobody
-RUN usermod -g 100 nobody
+# Add a generic htpc user, which we'll reuse for all HTPC containers, and set UID predictable value (the meaning of 2 lives)
+RUN useradd htpc -u 4242
 
 RUN add-apt-repository ppa:jcfp/ppa
 RUN add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ trusty universe multiverse"
