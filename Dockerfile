@@ -1,5 +1,5 @@
 FROM phusion/baseimage:0.9.16
-MAINTAINER David Young <davidy@funkypenguin.co.nz>
+MAINTAINER Karl Tiedt <ktiedt@gmail.com>
 #Based on the work of needo <needo@superhero.org>
 #ENV DEBIAN_FRONTEND noninteractive
 
@@ -9,24 +9,26 @@ ENV HOME /root
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
 
-# Add a generic htpc user, which we'll reuse for all HTPC containers, and set UID predictable value (the meaning of 2 lives)
-RUN useradd htpc -u 4242
+# Add a my user, which we'll reuse for all HTPC containers, and set UID predictable value (the meaning of 2 lives)
+RUN useradd ktiedt -u 1000
 
 RUN add-apt-repository ppa:jcfp/ppa
 RUN add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ trusty universe multiverse"
 RUN add-apt-repository "deb http://us.archive.ubuntu.com/ubuntu/ trusty-updates universe multiverse"
-RUN add-apt-repository ppa:jon-severinsson/ffmpeg
+RUN add-apt-repository ppa:mc3man/trusty-media
 RUN apt-get update -q
-RUN apt-get install -qy unrar par2 sabnzbdplus wget ffmpeg sabnzbdplus-theme-mobile
+RUN apt-get install -qy unrar par2 sabnzbdplus wget ffmpeg 
 
-# Install multithreaded par2
-RUN apt-get remove --purge -y par2
-RUN wget -P /tmp http://www.chuchusoft.com/par2_tbb/par2cmdline-0.4-tbb-20141125-lin64.tar.gz
-RUN tar -C /usr/local/bin -xvf /tmp/par2cmdline-0.4-tbb-20141125-lin64.tar.gz --strip-components 1
+# Install multithreaded par2 from source
+#RUN apt-get remove --purge -y par2
+#ADD par2 /usr/bin
+#RUN ln -f /usr/bin/par2 /usr/bin/par2create
+#RUN ln -f /usr/bin/par2 /usr/bin/par2verify
+#RUN ln -f /usr/bin/par2 /usr/bin/par2repair
 
 # Path to a directory that only contains the sabnzbd.conf
 VOLUME /config
-VOLUME /downloads
+VOLUME /home/ktiedt/Plex
 
 EXPOSE 8080
 
